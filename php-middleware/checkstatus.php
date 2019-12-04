@@ -38,7 +38,16 @@ invoice_status: "paid",
 date_added: "2019-12-02 09:55:06"
 }
 */
-echo json_encode($row);
+header('Content-Type: application/json');
+if($row):
+    $row->status = 'invoice  found';
+    echo json_encode($row);
+else:
+    $row = new stdClass();
+    $row->status = 'invoice not found';
+    echo json_encode($row);
+endif;
+
 #your integration should handle the invoice_status returned
  /*
     new - invoice created not paid
