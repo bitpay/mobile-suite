@@ -167,6 +167,7 @@ exports.createTransaction = function (req, res, request) {
 };
 
 exports.checkStatus = function (req, res, request) {
+    
     //your integration should check this function to verify the invoice status, instead of polling bitpay.com to prevent throttling
     //expects an invoice id
     /*
@@ -191,16 +192,16 @@ var dbConfig = {
  password:$db_password,
  database:$db_database
 }
-let data = req.body.data
+let invoiceid = req.query.invoiceid
 
-if(data.id == undefined){
+if(invoiceid == undefined){
     res.status(403).send('undefined')//send an empty response
     return
 }
 var connection = mysql.createConnection(dbConfig);
 
 connection.query("SELECT * FROM _bitpay_transactions WHERE invoice_id = ?",[
-    data.id
+    invoiceid
  ], function (err, result, fields) {
      if (err) throw err;
      let row = result[0]
@@ -212,10 +213,13 @@ connection.query("SELECT * FROM _bitpay_transactions WHERE invoice_id = ?",[
          confirmed - confirmed by 6 blockchain verifications.  This is best used when there are physical good
          expired - invoice has not been paid within 15 miinutes of creation
         */
-         res.status(200).send(row.invoice_status)
+         row.status = 'invoice found'
+         res.status(200).json(row)
          return
      }else{
-        res.status(403).send('undefined')//send an empty response
+        let row = {}
+        row.status = 'invoice not found'
+        res.status(403).json(row)//send an empty response
      }
    });
 

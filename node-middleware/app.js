@@ -45,6 +45,6 @@ app.post('/api/ipn', function (req, res) {
 });
 
 /** IPN LISTENER FROM CUSTOM INTEGRATION ***/
-app.post('/api/checkstatus', function (req, res) {
+app.get('/api/checkstatus', function (req, res) {
     invoiceLib.checkStatus(req,res,request)
 });

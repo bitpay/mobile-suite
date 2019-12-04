@@ -211,7 +211,7 @@ BitPay will send an IPN in the following format.
 
 The middleware will automatically verify the status and update the local database accordingly, you can customize behavior in the `receiveIpn` function in `invoice.js`
 
-Your custom integration should poll the NodeJS server to verify status if needed (ex a Mobile integration) instead of bitpay.com, to prevent rate limits and throttling.
+Your custom integration should poll the NodeJS server `/api/checkstatus` and send a `GET` with the `invoiceid` to verify status if needed (ex a Mobile integration) instead of bitpay.com, to prevent rate limits and throttling.
 
 
 ## Invoice Statuses
