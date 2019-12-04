@@ -168,16 +168,7 @@ BitPay will send an IPN in the following format.
 
 The middleware will automatically verify the status and update the local database accordingly by polling BitPay and comparing the status to the incoming IPN.  If they match, then the local table will update, and you can modify further action in the `switch` statement.
 
-Your custom integration should poll the PHP server `checkstatus.php` and send a `POST` with the id to verify status if needed (ex a Mobile integration) instead of bitpay.com, to prevent rate limits and throttling.
-
-```
-{
-"data": {
-    "id": "<invoice id>"
-	}
-}
-```
-
+Your custom integration should poll the PHP server `checkstatus.php` and send a `GET` with the `invoiceid` to verify status if needed (ex a Mobile integration) instead of bitpay.com, to prevent rate limits and throttling.
 
 
 ## Invoice Statuses

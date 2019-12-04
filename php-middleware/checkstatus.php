@@ -16,26 +16,15 @@ function BPC_autoloader($class)
     endif;
 }
 spl_autoload_register('BPC_autoloader');
-
-//sample incoming check
-/*
-{
-"data": {
-    "id": "<invoice id>"
-	}
-}
-*/
-// modify the following to meet your requirements, this example takes an incoming json post
 // Access the incoming data
-$json = file_get_contents('php://input');
-// decodes to object
-$data = json_decode($json);
-$invoice_data = $data->data;
-#get the value from  your database
+
+
 include 'conn.php';
+
+$invoiceID = mysqli_real_escape_string($mysqli,$_GET['invoiceid']);
 $table = '_bitpay_transactions';
 $stmt = $mysqli->prepare("SELECT * FROM $table WHERE invoice_id = ?");
-$stmt->bind_param("s", $invoice_data->id);
+$stmt->bind_param("s", $invoiceID);
 $stmt->execute();
 $result = $stmt->get_result();
 $row = mysqli_fetch_object($result);
