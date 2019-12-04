@@ -22,6 +22,7 @@ app.listen($port, function () {
 });
 
 app.get('/', function (req, res) {
+    console.log('aaa')
     res.send('Nope');
 });
 

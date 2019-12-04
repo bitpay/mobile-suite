@@ -101,12 +101,8 @@ public class MainActivity extends AppCompatActivity {
     //which URL to post to
     public String getInvoiceURL() {
 
-        String API_ENV = "DEV";
-        if(API_ENV.equals("DEV")){
-            return "https://test.bitpay.com/invoices";
-        }else{
-            return "https://bitpay.com/invoices";
-        }
+
+            return "<your middleware location>";
 
     }
 
@@ -140,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
             postData.put("currency", "USD");
             postData.put("extendedNotifications", "true");
             postData.put("transactionSpeed", "high");
-            postData.put("token", getAPIToken());
 
             final String invoiceURL;
             final String invoiceURLGET;
@@ -169,8 +164,11 @@ public class MainActivity extends AppCompatActivity {
                     //if ethereum, use String invoice_url = btcObj.getString(("EIP681"));
                     Log.i("invoice_url", invoice_url);
                     invoiceURL = data.getString("url");
-                    invoiceURLGET = invoiceURL.replace("?id=", "s/");
 
+                    //invoiceURLGET should be your middleware with an "invoiceid" GET parameter
+                    // example invoiceURLGET = "http://example.com/api/checkstatus?invoiceid=" + data.getString("id");
+                    invoiceURLGET = "http://example.com/api/checkstatus?invoiceid=" + data.getString("id");
+                    Log.i("MONITOR",invoiceURLGET);
 
                     try {
 
@@ -222,11 +220,11 @@ public class MainActivity extends AppCompatActivity {
                                         JSONObject invoiceObj = new JSONObject(invoiceJSONString);
 
 
-                                        JSONObject invoiceData = new JSONObject(invoiceObj.getString("data"));
+                                       // JSONObject invoiceData = new JSONObject(invoiceObj.getString("data"));
 
                                         //use data.getString("<field name to get the value>")
-                                        Log.i("INVOICE STATUS", invoiceData.getString("status"));
-                                        String invoiceStatus = invoiceData.getString("status");
+                                        Log.i("INVOICE STATUS", invoiceObj.getString("invoice_status"));
+                                        String invoiceStatus = invoiceObj.getString("invoice_status");
 
                                         if (invoiceStatus.trim().equals("paid") || invoiceStatus.trim().equals("confirmed")) {
                                             //payment has been made, add your logic here
@@ -236,14 +234,14 @@ public class MainActivity extends AppCompatActivity {
                                         if (invoiceStatus.trim().equals("expired")) {
                                             //user waited too long to pay
                                             Log.i("EXPIRED INVOICE", "EXPIRED INVOICE");
-                                            String transactionNotes = "BitPay Transaction ID: " + invoiceData.getString("id")+ " has expired.";
+                                            String transactionNotes = "BitPay Transaction ID: " + invoiceObj.getString("invoice_id")+ " has expired.";
                                             checkInvoiceStatus.cancel();
                                         }
 
                                         //this is if they tried to mess with the fees
-                                        if (invoiceStatus.trim().equals("paid") && invoiceData.getBoolean("lowFeeDetected") == true) {
+                                        if (invoiceStatus.trim().equals("paid")) {
                                             Log.i("EXPIRED INVOICE", "EXPIRED INVOICE");
-                                            String transactionNotes = "BitPay Transaction ID: " + invoiceData.getString("id")+ " has been canceled.";
+                                            String transactionNotes = "BitPay Transaction ID: " + invoiceObj.getString("invoice_id")+ " has been canceled.";
                                             checkInvoiceStatus.cancel();
 
                                         }
