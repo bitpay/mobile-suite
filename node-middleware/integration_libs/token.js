@@ -33,6 +33,8 @@ exports.tokenCheck = function (req, res) {
     async function checkToken(req, res, token) {
         let response = await fetch(endpoint + '/invoices/1?token=' + token);
         let dataV2 = await response.json();
+       
+        
         if (dataV2.error === 'Object not found') {
             res.code = 200;
             res.status(res.code);
@@ -42,57 +44,21 @@ exports.tokenCheck = function (req, res) {
                 message: 'This token is for v2',
                 resourceUrl: endpoint + '/invoices'
             });
-            return;
-        }
-
-        //check v1
-        checkV1Token(req, res, token)
-    }
-
-    async function checkV1Token(req, res, token) {
-        let request = require('request');
-
-        let headers = {
-            'content-type': 'application/json'
-        };
-
-        let options = {
-            url: endpoint + '/api/invoice/1',
-            headers: headers,
-            auth: {
-                'user': token,
-                'pass': ''
-            }
-        };
-
-        let callback = function (error, response) {
-            let dataV2 = JSON.parse(response.body);
-            if (dataV2.error.type === 'notFound') {
-                //good api key
-                res.code = 200;
-                res.status(res.code);
-                res.json({
-                    status: res.code,
-                    apiVersion: 'v1',
-                    message: 'This token is for v1',
-                    resourceUrl: endpoint + '/api/invoice'
-                });
-
-                return;
-            }
+          
+        }else{
             res.code = 403
             res.status(res.code);
             
             res.json({
                 status: res.code,
                 error: {
-                    message: dataV2.error.message
+                    message: 'Invalid Token'
                 }
             })
-        };
+        }
 
-        request(options, callback)
     }
+
 
     checkToken(req, res, token)
 };
