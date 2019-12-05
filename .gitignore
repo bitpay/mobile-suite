@@ -4,7 +4,6 @@ node-middleware/node_modules
 node-middleware/logs/*
 php-middleware/.env
 php-middleware/conn.php
-swift/sample-project
 android/.idea
 android/.gradle/*
 android/.gradle/5.4.1/executionHistory/executionHistory.bin
