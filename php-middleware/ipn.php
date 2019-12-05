@@ -66,7 +66,6 @@ $json = file_get_contents('php://input');
 // decodes to object
 $data = json_decode($json);
 $invoice_data = $data->data;
-#print_r($invoice_data);
 
 $invoiceID = $invoice_data->id;
 $ipn_status = $invoice_data->status;

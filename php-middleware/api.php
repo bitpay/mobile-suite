@@ -86,7 +86,6 @@ $decoded_invoice = $invoice->BPC_getInvoiceRaw();
 print_r($decoded_invoice);
 */
 $decoded_invoice = $invoice->BPC_getInvoiceRaw();
-#print_r($decoded_invoice);
 
 #save the id into the database.  You will need to setup your own connection, example in conn_example.php
 include 'conn.php';
