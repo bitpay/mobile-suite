@@ -5,7 +5,15 @@ any incoming data and pad as-needed or transform to match your specific needs.  
 of multiple locations (ie mobile devices) in the event your key is compromised and a new one needs to be generated. 
 */
 
-#autoload the classes
+#autoload classes to read the .env
+define('DIR_VENDOR', __DIR__.'/vendor/');
+if (file_exists(DIR_VENDOR . 'autoload.php')) {
+    require_once(DIR_VENDOR . 'autoload.php');
+}
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+#autoload the BitPay classes
 function BPC_autoloader($class)
 {
     if (strpos($class, 'BPC_') !== false):
@@ -16,6 +24,7 @@ function BPC_autoloader($class)
     endif;
 }
 spl_autoload_register('BPC_autoloader');
+
 
 //sample incoming
 /*
@@ -35,16 +44,13 @@ $data = json_decode($json);
 
 //create a request to pass to BitPay
 //your token should be in a secure location, for demo purposes only it will be in a .env (and not included in this repo)
-$filename = ".env";
-$handle = fopen($filename, "r");
-$bitpay_checkout_token = fread($handle, filesize($filename));
-fclose($handle);
-//$bitpay_checkout_token = "your api token";
-$env = 'test'; // or prod
+
+$bitpay_checkout_token = getenv("API_TOKEN");
+$env = getenv("ENV"); //test or prod
+
 $config = new BPC_Configuration($bitpay_checkout_token, $env);
 //create a class that will contain all the parameters to send to bitpay
 $params = new stdClass();
-
 $params->extension_version = "My_Plugin_1.0";
 $params->price = $data->total;
 $params->currency = $data->currency; //set as needed

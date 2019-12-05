@@ -3,10 +3,8 @@
 This PHP service is a custom middleware layer for 3rd-party integrations who can't modify outgoing data.  This middleware layer will map variables as needed.  
 
 ## Setup
-In the `api.php`, `checkstatus`, and `ipn.php`, set the following
+Copy the `sample.env` to `.env` and change the **API Token** and **Env**
 
-* `$env` : **test** or **prod**
-* `$bitpay_checkout_token`: your api token
 
 **note:** For this **README** all urls will refer to `test.bitpay.com`
 
@@ -15,7 +13,6 @@ Create a database for IPN information.  This assumes you're using MySQL
 ```
 CREATE TABLE _bitpay_transactions ( id INT(11) NOT NULL AUTO_INCREMENT , invoice_id VARCHAR(255) NOT NULL , invoice_status VARCHAR(255) NOT NULL , date_added TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (id)) ENGINE = InnoDB;
 ```
-
 
 
 ## Creating BitPay Invoice
@@ -48,80 +45,100 @@ A response will be sent in the following format.  As a user you must redirect us
 
 ```
 {
-    "facade": "pos/invoice",
-    "data": {
-        "url": "https://test.bitpay.com/invoice?id=<bitpay invoice id>",
-        "status": "new",
-        "price": 5,
-        "currency": "USD",
-        "invoiceTime": 1565118684277,
-        "expirationTime": 1565119584277,
-        "currentTime": 1565118684304,
-        "id": "<bitpay invoice id>",
-        "lowFeeDetected": false,
-        "amountPaid": 0,
-        "exceptionStatus": false,
-        "redirectURL": "<your specificed redirect url>",
-        "refundAddressRequestPending": false,
-        "buyerProvidedInfo": {
-            "name": "Satoshi Nakamoto"
-        },
-        "paymentSubtotals": {
-            "BTC": 42600,
-            "BCH": 1455600
-        },
-        "paymentTotals": {
-            "BTC": 42700,
-            "BCH": 1455600
-        },
-        "paymentDisplayTotals": {
-            "BTC": "0.000427",
-            "BCH": "0.014556"
-        },
-        "paymentDisplaySubTotals": {
-            "BTC": "0.000426",
-            "BCH": "0.014556"
-        },
-        "exchangeRates": {
-            "BTC": {
-                "USD": 11750.01,
-                "BCH": 34.166938063390525
-            },
-            "BCH": {
-                "USD": 343.49999999999994,
-                "BTC": 0.02923272397074855
-            }
-        },
-        "supportedTransactionCurrencies": {
-            "BTC": {
-                "enabled": true
-            },
-            "BCH": {
-                "enabled": true
-            }
-        },
-        "minerFees": {
-            "BTC": {
-                "satoshisPerByte": 1,
-                "totalFee": 100
-            },
-            "BCH": {
-                "satoshisPerByte": 0,
-                "totalFee": 0
-            }
-        },
-        "paymentCodes": {
-            "BTC": {
-                "BIP72b": "bitcoin:?r=https://test.bitpay.com/i/P3UFybTwAkt4k2YxELxm9t",
-                "BIP73": "https://test.bitpay.com/i/P3UFybTwAkt4k2YxELxm9t"
-            },
-            "BCH": {
-                "BIP72b": "bitcoincash:?r=https://test.bitpay.com/i/P3UFybTwAkt4k2YxELxm9t",
-                "BIP73": "https://test.bitpay.com/i/P3UFybTwAkt4k2YxELxm9t"
-            }
-        },
-        "token": "<random guid>"
-    }
+facade: "public/invoice",
+	data: {
+	url: "https://test.bitpay.com/invoice?id=<invoice id>",
+	status: "new",
+	price: 1,
+	currency: "USD",
+	invoiceTime: 1575563679078,
+	expirationTime: 1575564579078,
+	currentTime: 1575563686809,
+	id: "<invoice id>",
+	lowFeeDetected: false,
+	amountPaid: 0,
+	displayAmountPaid: "0",
+	exceptionStatus: false,
+	refundAddressRequestPending: false,
+	buyerProvidedInfo: { },
+	paymentSubtotals: {
+	BTC: 13600,
+	BCH: 477600,
+	ETH: 6790000000000000
+	},
+	paymentTotals: {
+	BTC: 13700,
+	BCH: 477600,
+	ETH: 6790000000000000
+	},
+	paymentDisplayTotals: {
+	BTC: "0.000137",
+	BCH: "0.004776",
+	ETH: "0.006790"
+	},
+	paymentDisplaySubTotals: {
+	BTC: "0.000136",
+	BCH: "0.004776",
+	ETH: "0.006790"
+	},
+	exchangeRates: {
+	BTC: {
+	USD: 7330.16,
+	BCH: 34.97213740458015,
+	ETH: 49.76685450471859
+	},
+	BCH: {
+	USD: 209.39999999999998,
+	BTC: 0.028566868162675625,
+	ETH: 1.4216851110054993
+	},
+	ETH: {
+	USD: 147.28,
+	BTC: 0.020092303452716648,
+	BCH: 0.7026717557251909
+	}
+	},
+	supportedTransactionCurrencies: {
+	BTC: {
+	enabled: true
+	},
+	BCH: {
+	enabled: true
+	},
+	ETH: {
+	enabled: true
+	}
+	},
+	minerFees: {
+	BTC: {
+	satoshisPerByte: 1,
+	totalFee: 100
+	},
+	BCH: {
+	satoshisPerByte: 0,
+	totalFee: 0
+	},
+	ETH: {
+	satoshisPerByte: 0,
+	totalFee: 0
+	}
+	},
+	jsonPayProRequired: false,
+	paymentCodes: {
+	BTC: {
+	BIP72b: "bitcoin:?r=https://test.bitpay.com/i/<invoice id>",
+	BIP73: "https://test.bitpay.com/i/<invoice id>"
+	},
+	BCH: {
+	BIP72b: "bitcoincash:?r=https://test.bitpay.com/i/<invoice id>",
+	BIP73: "https://test.bitpay.com/i/<invoice id>"
+	},
+	ETH: {
+	EIP681: "ethereum:?r=https://test.bitpay.com/i/<invoice id>"
+	}
+	},
+	token: "<random guid>"
+	}
 }
 ```
 

@@ -5,6 +5,15 @@ of the invoice, without having to constantly poll BitPay and be subject to rate 
 
 The ipn.php file will be used by BitPay to update / verify the status, and this file can be used to verify that change.
 */
+
+#autoload classes to read the .env
+define('DIR_VENDOR', __DIR__.'/vendor/');
+if (file_exists(DIR_VENDOR . 'autoload.php')) {
+    require_once(DIR_VENDOR . 'autoload.php');
+}
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 #autoload the classes
 function BPC_autoloader($class)
 {

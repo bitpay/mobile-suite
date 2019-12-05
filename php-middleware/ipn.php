@@ -6,6 +6,14 @@ and have accesss to your database and accept incoming POST on 443.
 This file will be used by BitPay to update / verify the status, and the checkstatus.php  file can be used to verify that change from your integration.
 */
 
+#autoload classes to read the .env
+define('DIR_VENDOR', __DIR__.'/vendor/');
+if (file_exists(DIR_VENDOR . 'autoload.php')) {
+    require_once(DIR_VENDOR . 'autoload.php');
+}
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 #autoload the classes
 function BPC_autoloader($class)
 {
@@ -68,12 +76,9 @@ $ipn_status = $invoice_data->status;
 
 //create a basic object to send to BitPay
 //your token should be in a secure location, for demo purposes only it will be in a .env (and not included in this repo)
-$filename = ".env";
-$handle = fopen($filename, "r");
-$bitpay_checkout_token = fread($handle, filesize($filename));
-fclose($handle);
-#$bitpay_checkout_token = "your api token";
-$env = 'test'; // or prod
+
+$bitpay_checkout_token = getenv("API_TOKEN");
+$env = getenv("ENV"); //test or prod
 $config = new BPC_Configuration($bitpay_checkout_token, $env);
 
 //create a class that will contain all the parameters to send to bitpay
