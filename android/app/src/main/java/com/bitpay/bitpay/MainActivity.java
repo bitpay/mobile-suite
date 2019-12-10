@@ -89,20 +89,15 @@ public class MainActivity extends AppCompatActivity {
         return "BTC";
         //return BCH;
         //return ETH;
-    }
-
-    //your api key
-    public String getAPIToken() {
-        String API_KEY="<your api token>";
-        return API_KEY;
 
     }
+
 
     //which URL to post to
     public String getInvoiceURL() {
 
 
-            return "<your middleware location>";
+            return "<your middleware>";
 
     }
 
@@ -160,8 +155,8 @@ public class MainActivity extends AppCompatActivity {
                     /**drill down to the payment code**/
                     JSONObject paymentCodeObj = new JSONObject(data.getString("paymentCodes"));
                     JSONObject btcObj = new JSONObject(paymentCodeObj.getString(getCryptoType()));
-                    String invoice_url = btcObj.getString(("BIP72b"));
-                    //if ethereum, use String invoice_url = btcObj.getString(("EIP681"));
+                    String invoice_url = btcObj.getString(("EIP681"));
+                    //if ETHEREUM/GUSD/PAX/USDC, use String invoice_url = btcObj.getString(("EIP681"));
                     Log.i("invoice_url", invoice_url);
                     invoiceURL = data.getString("url");
 
