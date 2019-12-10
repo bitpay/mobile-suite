@@ -23,7 +23,7 @@ exports.tokenCheck = function (req, res) {
     //set the endpoint to dev by default 
     let endpoint = $dev_endpoint
     let token = $dev_token
-    if ($is_production == true) {
+    if ($is_production == "TRUE") {
         token = $prod_token
         endpoint = $prod_endpoint
     }

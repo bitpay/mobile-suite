@@ -35,7 +35,7 @@ exports.createTransaction = function (req, res, request) {
     //set the endpoint to dev by default 
 
     let $token = $dev_token
-    if ($is_production == true) {
+    if ($is_production == "TRUE") {
         $token = $prod_token
     }
 
